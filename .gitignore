@@ -4,6 +4,7 @@ jspm_packages/
 
 # Optional npm cache directory
 .npm
+.env
 
 # Nuxt.js build / generate output
 .nuxt

@@ -8,6 +8,4 @@ router.post("/login", adminController.adminlogin)
 
 router.post("/staff/login/admin", adminController.StaffLogin)
 
-
-
 module.exports = router

@@ -5,6 +5,7 @@ module.exports = {
     CustomBloodTest:"CustomBloodTest",
     Quote:"Quote",
     Order:"Order",
-    OrderCount:"OrderCount"
-
+    OrderCount:"OrderCount",
+    InstallApp: "InstallApp",
+    VendorUsers:"VendorUsers"
 }
