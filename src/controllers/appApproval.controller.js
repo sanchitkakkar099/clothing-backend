@@ -28,8 +28,9 @@ exports.fetchapprovalrequest = async (req, res) => {
   };
 
   exports.updateApproval = async (req, res) => {
+    console.log("shopname",req.body.shopname);
     try {
-      const { email, isAppapproved } = req.body;
+      const { email, isAppapproved,shopname } = req.body;
   
       if (!email || !isAppapproved) {
         return res.status(400).send(HelperUtils.error("Email and isAppapproved fields are required", {}));
@@ -46,8 +47,9 @@ exports.fetchapprovalrequest = async (req, res) => {
   
       const Approvalupdated = await db.updateOne({
         collection: dbModels.VendorUsers,
-        query: { email: email.toLowerCase() },
+        query: { email: email.toLowerCase(),shopname },
         update: { $set: { isAppapproved: isAppapproved } },
+        options: { new: true },
       });
   
       res.status(200).send(HelperUtils.success("Successfully updated approval status", Approvalupdated));
