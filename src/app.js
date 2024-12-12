@@ -29,7 +29,7 @@ require("./loaders/logger")(app)
 const port = process.env.PORT || 5055
 Promise.all([connectDB()]).then(() => {
     server.listen(port, () => {
-        console.log(`Server started on port ${process.env.PORT} 🚀`)
+        console.log(`Server started on port ${process.env.PORT} 🚀`);
     })
 }).catch((error) => {
     console.log(error);

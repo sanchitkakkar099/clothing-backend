@@ -6,6 +6,6 @@ router.post("/", adminController.createAdmin)
 
 router.post("/login", adminController.adminlogin)
 
-router.post("/staff/login/admin", adminController.StaffLogin)
+router.post("/staff/login/admin", adminController.VendorLogin)
 
 module.exports = router

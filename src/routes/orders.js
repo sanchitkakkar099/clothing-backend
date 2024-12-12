@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const ordersController = require("../controllers/orders.controller");
-
-router.get("/list",ordersController.fetchOrdersController);
+const {AdminAuth} = require("../middleware/auth")
+router.get("/list",AdminAuth,ordersController.fetchOrdersController);
 
 
 module.exports = router

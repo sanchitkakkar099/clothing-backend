@@ -1,5 +1,5 @@
 module.exports = {
-    User: 'User',
+    User:"User",
     Category:"Category",
     BloodTest:"BloodTest",
     CustomBloodTest:"CustomBloodTest",
@@ -7,5 +7,7 @@ module.exports = {
     Order:"Order",
     OrderCount:"OrderCount",
     InstallApp: "InstallApp",
-    VendorUsers:"VendorUsers"
+    VendorUsers:"VendorUsers",
+    StoreAppInfo: "StoreAppInfo",
+    Product: "Product",
 }

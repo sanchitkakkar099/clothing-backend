@@ -1,7 +1,7 @@
 const axios = require('axios'); 
 const API_KEY =process.env.APIKEY;
 const API_PASSWORD =process.env.APIPASSWORD;
-const SHOP_DOMAIN = 'parenttesting'; 
+const SHOP_DOMAIN = process.env.SHOP_DOMAIN; 
 const API_VERSION = '2022-01'; // Adjust the API version as needed  
    
 const fetchOrdersController = async (req, res) => {
@@ -9,7 +9,7 @@ const fetchOrdersController = async (req, res) => {
     console.log("apikey",process.env.APIKEY);
     console.log("process.env.APIPASSWORD",process.env.APIPASSWORD);
     // Construct the URL for fetching orders
-    const url = `https://${SHOP_DOMAIN}.myshopify.com/admin/api/${API_VERSION}/orders.json`;
+    const url = `https://${SHOP_DOMAIN}/admin/api/${API_VERSION}/orders.json`;
 
     // Set up the authentication headers
     const authHeader = {

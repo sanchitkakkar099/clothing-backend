@@ -8,7 +8,7 @@ exports.installAppDataList = async (req, res) => {
     try {
         // Query the MongoDB collection to get install app data
         const installAppData = await db.find({
-          collection: models.InstallApp,
+          collection: models.StoreAppInfo,
           query: {} // You can specify additional query parameters here if needed
         });
         // Send the install app data as a response

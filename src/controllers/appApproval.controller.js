@@ -1,18 +1,13 @@
 const HelperUtils = require("../utils/helper")
-
 const db = require("../utils/mongooseMethods")
 const dbModels = require("../utils/modelName")
-const constants = require("../utils/const")
-const bycrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
 
 exports.fetchapprovalrequest = async (req, res) => {
     try {
       const users = await db.find({
-        collection: dbModels.VendorUsers,
-        query: { isact: true, isAppinstall: true },
-        project: { _id:0,shopname:1,email: 1, isAppapproved: 1, isAppinstall: 1 },
+        collection: dbModels.User,
+        query: { isact: true, isAppinstall: true, role: "Vendor" },
+        project: { _id:0,storename:1,email: 1, isAppapproved: 1, isAppinstall: 1 },
       });
   
       if (users.length === 0) {
@@ -28,16 +23,16 @@ exports.fetchapprovalrequest = async (req, res) => {
   };
 
   exports.updateApproval = async (req, res) => {
-    console.log("shopname",req.body.shopname);
     try {
+      console.log("req body",req?.body);
       const { email, isAppapproved,shopname } = req.body;
-  
-      if (!email || !isAppapproved) {
+      console.log("email,isAppapproved",email,isAppapproved);
+      if (!email) {
         return res.status(400).send(HelperUtils.error("Email and isAppapproved fields are required", {}));
       }
   
       const user = await db.findOne({
-        collection: dbModels.VendorUsers,
+        collection: dbModels.User,
         query: { email: email.toLowerCase() },
       });
   
@@ -46,9 +41,9 @@ exports.fetchapprovalrequest = async (req, res) => {
       }
   
       const Approvalupdated = await db.updateOne({
-        collection: dbModels.VendorUsers,
-        query: { email: email.toLowerCase(),shopname },
-        update: { $set: { isAppapproved: isAppapproved } },
+        collection: dbModels.User,
+        query: { email: email.toLowerCase(),storename:shopname},
+        update: { $set: { isAppapproved:isAppapproved} },
         options: { new: true },
       });
   
