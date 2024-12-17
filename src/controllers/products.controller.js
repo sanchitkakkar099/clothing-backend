@@ -38,4 +38,29 @@ const fetchproductsController = async (storeDomain, accessToken, req, res) => {
   }
 };
 
-module.exports = { fetchproductsController };
+const fetchProductCount = async(storeDomain, accessToken, req, res) => {
+  try{
+    const shopifyCountEndpoint = `https://${storeDomain}/admin/api/2024-01/products/count.json`;
+
+    const config = {
+      headers: {
+        "X-Shopify-Access-Token": accessToken, // Access Token from your database
+        "Content-Type": "application/json",
+      },
+    };
+
+
+    const countResponse = await axios.get(shopifyCountEndpoint, config);
+    const productCount = countResponse?.data?.count;
+    
+    console.log("updatedProducts and  productCount",productCount);
+    return {
+        productCount,
+      };
+  }catch(error){
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: "Failed to fetch product count" });
+  }
+}
+
+module.exports = { fetchproductsController,fetchProductCount};

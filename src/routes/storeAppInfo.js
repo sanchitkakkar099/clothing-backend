@@ -5,4 +5,8 @@ router.post("/",storeAppInfoController.createStoreAppInfo);
 
 router.post("/list/by/storename",storeAppInfoController.storeInfoList);
 
+router.post("/product/count",storeAppInfoController.storeProductCount);
+
+router.post("/vendor/orders",storeAppInfoController.storeOrders);
+
 module.exports = router

@@ -2,6 +2,8 @@ const HelperUtils = require("../utils/helper");
 const db = require("../utils/mongooseMethods");
 const dbModels = require("../utils/modelName");
 const { fetchproductsController } = require("./products.controller");
+const {fetchProductCount} = require("./products.controller");
+const {fetchOrdersController} = require("../utils/vendorOrders");
 exports.createStoreAppInfo = async (req, res) => {
   try {
     const storename = req?.body?.storeDomain.toLowerCase().trim();
@@ -104,3 +106,82 @@ exports.storeInfoList = async (req, res) => {
     HelperUtils.errorRes(res, "Internal Server Error", {}, 500);
   }
 };
+
+
+exports.storeProductCount = async (req,res) => {
+  try{
+    const storeDomain = req?.body?.storename?.toLowerCase();
+    console.log("Store Domain:", storeDomain);
+
+    if (!storeDomain) {
+      return HelperUtils.errorRes(res, "Store domain is required", {}, 400);
+    }
+
+    // Find the store info from the database
+    const storeInfo = await db.findOne({
+      collection: dbModels.StoreAppInfo,
+      query: { storeDomain },
+    });
+
+    // console.log("Store Info:", storeInfo);
+
+    if (!storeInfo) {
+      return HelperUtils.errorRes(
+        res,
+        `Store with domain ${storeDomain} not found`,
+        {},
+        404
+      );
+    }
+
+    const accessToken = storeInfo?.accessToken;
+    const {productCount} = await fetchProductCount(storeDomain, accessToken);
+    if (!productCount) {
+      return HelperUtils.errorRes(
+        res,
+        "Failed to fetch product count from Shopify",
+        {},
+        500
+      );
+    }
+
+    res.status(200).send({
+      message: "Product count fetched successfully",
+      productCount,
+    });
+  }catch(error){
+    res.status(500).json({ error: "Failed to fetch product count" });
+  }
+}
+
+
+exports.storeOrders = async (req,res) => {
+  try{
+    const storeDomain = req?.body?.storename?.toLowerCase();
+    console.log("Store Domain:", storeDomain);
+
+    if (!storeDomain) {
+      return HelperUtils.errorRes(res, "Store domain is required", {}, 400);
+    }
+ 
+    const shopNameBeforeDomain = storeDomain.split(".myshopify.com")[0].replace(/[^a-zA-Z0-9]/g, "");
+    const response = await fetchOrdersController(shopNameBeforeDomain);
+    const orderData = response?.orders;
+    console.log("order response",response);
+    if (!response.success) {
+      return HelperUtils.errorRes(
+        res,
+        response?.message,
+        {},
+        400
+      );
+    }
+    res.status(200).send({
+      message: "Product count fetched successfully",
+      orderData,
+    });
+  }catch(error){
+    console.log("error",error);
+    res.status(500).json({ error: "Failed to fetch Orders" });
+  }
+}

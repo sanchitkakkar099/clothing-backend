@@ -1,7 +1,7 @@
 const HelperUtils = require("../utils/helper");
 const db = require("../utils/mongooseMethods");
 const dbModels = require("../utils/modelName");
-
+const {productDelet} = require("../utils/changeInDraft")
 exports.appStatus = async (req,res) => {
     try{
          const {isAppinstall,storename,isAppUpdate} = req?.body;
@@ -28,6 +28,12 @@ exports.appStatus = async (req,res) => {
               });
               res.status(200).send(HelperUtils.success("Successfully updated app status", AppStatusupdated));
               console.log("Updated user", AppStatusupdated);
+              if (AppStatusupdated) {
+                if (!isAppinstall) {
+                  console.log("product delete initiate");
+                  await productDelet(storename);
+                }
+              } 
           }
     }catch(error){
        console.log("error",error);

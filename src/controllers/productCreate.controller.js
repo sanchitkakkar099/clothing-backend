@@ -13,12 +13,13 @@ exports.createProduct = async (req, res) => {
       console.log("products and store data",Products,storename,selectedCategory);
      try {
         const appData = await db.findOne({
-          collection: dbModels.StoreAppInfo,
-          query: { storeDomain: storename },
+          collection: dbModels.User,
+          query: {storename: storename },
+          project: { _id:0,storename:1,email:1,isAppapproved: 1,isAppinstall: 1 }
         });
        console.log("appData",appData);
-        if (!appData?.isActive) {
-            return HelperUtils.errorRes(res,"App is Deactivated",{},401);
+        if (!appData?.isAppinstall) {
+            return HelperUtils.errorRes(res,"App is deactivated,Please activate the app to Continue",{},401);
         } 
         const createresponse =  await productCreator(Products,storename,selectedCategory);
         if (!createresponse) {
@@ -33,7 +34,7 @@ exports.createProduct = async (req, res) => {
       res.send(Products);
 }
 
- const productCreator = async (Products,shop_name,selectedCategory,req, res) => {
+ const productCreator = async (Products,shop_name,selectedCategory) => {
     const results = [];
     console.log("products going to create", Products,selectedCategory);
     for (const product of Products) {
