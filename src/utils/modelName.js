@@ -10,4 +10,5 @@ module.exports = {
     VendorUsers:"VendorUsers",
     StoreAppInfo: "StoreAppInfo",
     Product: "Product",
+    StoreProfile: "StoreProfile"
 }

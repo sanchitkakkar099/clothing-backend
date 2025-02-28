@@ -37,7 +37,7 @@ const fetchOrdersController = async (shopNameBeforeDomain) => {
     // Filter the orders based on the shop name
     const filteredOrders = filterVendor(orders, shopNameBeforeDomain);
 
-    if (filteredOrders.length === 0) {
+    if (filteredOrders?.length === 0) {
       return {
         success: false,
         message: "No orders found for the current vendor products",

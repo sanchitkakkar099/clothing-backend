@@ -6,7 +6,11 @@ const productWebhook = require("./productwebhook");
 const appApproval = require("./approval");
 const storeAppInforoutes = require("./storeAppInfo")
 const productsroutes = require("./products");
+const fileuplaodsRoutes = require("./fileuploads")
 const dashboardDetailsroutes = require("./dashboard");
+
+
+router.use("/uploads", fileuplaodsRoutes);
 router.use("/admin", adminroutes);
 router.use("/orders",ordersroutes);
 router.use("/installapp",installApproutes);

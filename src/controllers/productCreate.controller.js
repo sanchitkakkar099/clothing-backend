@@ -1,4 +1,3 @@
-// import { error, success } from "./utils/helper.js";
 const HelperUtils = require("../utils/helper");
 const db = require("../utils/mongooseMethods");
 const dbModels = require("../utils/modelName");

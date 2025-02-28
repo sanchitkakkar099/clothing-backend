@@ -4,6 +4,8 @@ const dbModels = require("../utils/modelName");
 const { fetchproductsController } = require("./products.controller");
 const {fetchProductCount} = require("./products.controller");
 const {fetchOrdersController} = require("../utils/vendorOrders");
+const {accessToken} = require("../utils/getAccessToken");
+
 exports.createStoreAppInfo = async (req, res) => {
   try {
     const storename = req?.body?.storeDomain.toLowerCase().trim();
@@ -58,36 +60,17 @@ exports.createStoreAppInfo = async (req, res) => {
 
 exports.storeInfoList = async (req, res) => {
   try {
-    console.log("Request Body:", req?.body);
+    // console.log("Request Body:", req?.body);
 
     // Extract storeDomain from the request body
     const storeDomain = req?.body?.storeDomain?.toLowerCase();
     console.log("Store Domain:", storeDomain);
 
-    if (!storeDomain) {
-      return HelperUtils.errorRes(res, "Store domain is required", {}, 400);
-    }
 
-    // Find the store info from the database
-    const storeInfo = await db.findOne({
-      collection: dbModels.StoreAppInfo,
-      query: { storeDomain },
-    });
-
-    // console.log("Store Info:", storeInfo);
-
-    if (!storeInfo) {
-      return HelperUtils.errorRes(
-        res,
-        `Store with domain ${storeDomain} not found`,
-        {},
-        404
-      );
-    }
-
-    const accessToken = storeInfo.accessToken;
-    const {products,productCount} = await fetchproductsController(storeDomain, accessToken);
-     console.log("productCount",productCount);
+    const Token = await accessToken(storeDomain);
+    console.log("Token",Token);
+    const {products, nextPage,prevPage,} = await fetchproductsController(storeDomain,Token,req?.body?.pageInfo );
+    
     if (!products) {
       return HelperUtils.errorRes(
         res,
@@ -100,6 +83,8 @@ exports.storeInfoList = async (req, res) => {
     res.status(200).send({
       message: "Products fetched successfully",
       products,
+      nextPage,
+      prevPage
     });
   } catch (error) {
     console.error("Error in storeInfoList:", error);
@@ -183,5 +168,40 @@ exports.storeOrders = async (req,res) => {
   }catch(error){
     console.log("error",error);
     res.status(500).json({ error: "Failed to fetch Orders" });
+  }
+}
+
+
+exports.StoreProfile = async(req,res) => {
+   console.log("req body",req?.body);
+  try {
+    const storeProfile = {
+      shop_name: req?.body?.shop_name,
+      store_description: req?.body?.store_description,
+      store_email: req?.body?.store_email,
+      store_contact: req?.body?.store_contact,
+      store_domain: req?.body?.store_domain, 
+      store_facbookId: req?.body?.store_facbookId,
+      store_InstaId: req?.body?.store_InstaId,
+      address1: req?.body?.address1,        
+      address2: req?.body?.address2,        
+      city: req?.body?.city,               
+      country: req?.body?.country,
+      brand_image_url: req?.body?.brandImage,
+      brand_logo: req?.body?.brandLogo,     
+      total_products: req?.body?.total_products, 
+      timings: req?.body?.timings, 
+    };
+
+
+    const SavestoreData = await db.insertOne({
+      collection : dbModels.StoreProfile,
+      document:storeProfile,
+   });
+    console.log("SavestoreData",SavestoreData);
+    res.send(HelperUtils.success("Store profile saved successfully!",SavestoreData));
+  } catch (error) {
+    console.log("error",error);
+    HelperUtils.errorRes(res, "Error saving store profile", error);
   }
 }
